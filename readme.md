@@ -2,6 +2,10 @@
 
 Here’s a simple example demonstrating how Redux works in a JavaScript file. This example assumes you already have the Redux package installed in your project. We'll create a Redux store, define some actions, and demonstrate how state is managed. You can run this script in a Node.js environment to see Redux in action!
 
+# How to run:
+
+Run command "node index.js" to execute the index.js file
+
 ## How it works:
 
 1. **Initial State**: `initialTodoState` & `initialUserState` define the starting state of the application.
