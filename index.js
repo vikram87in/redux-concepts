@@ -17,7 +17,7 @@ const FETCH_USER_FAILURE = 'FETCH_USER_FAILURE';
 
 // 3. Action Creators
 // For Todos
-const addTodo = (todo) => ({ type: ADD_TODO, payload: todo });
+const addTodo = (todo) => ({ type: ADD_TODO, payload: todo }); // type property mandatory; payload is optional
 const removeTodo = (id) => ({ type: REMOVE_TODO, payload: id });
 
 // For User (with Thunk for async actions)
@@ -25,8 +25,8 @@ const fetchUserRequest = () => ({ type: FETCH_USER_REQUEST });
 const fetchUserSuccess = (user) => ({ type: FETCH_USER_SUCCESS, payload: user });
 const fetchUserFailure = (error) => ({ type: FETCH_USER_FAILURE, payload: error });
 
-const fetchUser = (userId) => { // special type of action creater; returns a function instead of an object
-  return async (dispatch) => { // inside the function, we can dispatch multiple actions
+const fetchUser = (userId) => { // special type of action creater; returns a function ("thunk") instead of an object
+  return async (dispatch) => { // inside the function (`dispatch` and `getState` as arguments), we can dispatch multiple actions
     dispatch(fetchUserRequest());
     try {
       // Simulate API call
@@ -76,12 +76,12 @@ const rootReducer = combineReducers({
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
 // 7. Subscribe to Store
-store.subscribe(() => {
-  console.log('Subscriber1: State updated:', store.getState());
+const unsubscribe = store.subscribe(() => {
+  console.log('Subscriber1: State updated:', store.getState().todos);
 });
 
 // can subscribe multiple times also
-// store.subscribe(() => {
+// const unsubscribe2 = store.subscribe(() => {
 //   console.log('Subscriber2: State updated:', store.getState());
 // });
 
@@ -90,5 +90,12 @@ store.dispatch(addTodo({ id: 1, text: 'Learn Redux' }));
 store.dispatch(addTodo({ id: 2, text: 'Build a project' }));
 store.dispatch(removeTodo(1));
 
-// Dispatch async action using Redux Thunk
-store.dispatch(fetchUser(101)); // Fetch user with ID 101
+// Dispatch async action using Redux Thunk; 
+// It even takes care to return the thunk’s return value
+// from the dispatch, so I can chain Promises as long as I return them.
+
+store.dispatch(fetchUser(101)).then(() => { // Fetch user with ID 101
+  // 9. Unsubscribe the listener
+  unsubscribe();
+  console.log('Unsubscribed!')
+});
