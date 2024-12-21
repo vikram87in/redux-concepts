@@ -4,7 +4,7 @@ Here’s a simple example demonstrating how Redux works in a JavaScript file. Th
 
 # How to run:
 
-Run command "node index.js" to execute the index.js file
+Run command "node index.js" to execute the index.js file.
 
 ## How it works:
 
